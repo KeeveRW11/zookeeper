@@ -5,6 +5,12 @@ const express = require('express');
 const PORT = process.env.PORT || 3002;
 
 const app = express();
+const path = require('path');
+
+app.use(express.static('public'));
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 function filterByQuery(query, animalsArray) {
     let personalityTraitsArray = [];
@@ -48,6 +54,8 @@ app.get('/api/animals', (req, res) => {
     res.json(results);
 });
 
+
+
 app.get('/api/animals/:id', (req, res) => {
     const result = findById(req.params.id, animals);
     if (result) {
@@ -56,6 +64,14 @@ app.get('/api/animals/:id', (req, res) => {
         res.sendStatus(404);
     }
 })
+
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+  });
+
+app.get('/zookeepers', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});  
 
 app.listen(PORT, () => {
     console.log(`API server now on port ${PORT}!`);
